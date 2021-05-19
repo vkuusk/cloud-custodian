@@ -277,7 +277,10 @@ def build(provider, registry, tag, image, quiet, push, test, scan, verbose):
     """
     try:
         import docker
-    except ImportError:
+    except ImportError as e:
+        import traceback
+        print("import error %s" % e)
+        traceback.print_exc()
         print("python docker client library required")
         import sys
         print("python %s" % ("\n".join(sys.path)))
