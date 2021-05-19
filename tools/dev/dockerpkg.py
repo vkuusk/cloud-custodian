@@ -279,6 +279,8 @@ def build(provider, registry, tag, image, quiet, push, test, scan, verbose):
         import docker
     except ImportError:
         print("python docker client library required")
+        import sys
+        print("python %s" % ("\n".join(sys.path)))
         sys.exit(1)
     if quiet:
         logging.getLogger().setLevel(logging.WARNING)
