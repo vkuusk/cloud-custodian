@@ -3674,11 +3674,21 @@ def test_s3_encryption_audit(test, aws_s3_encryption_audit):
     test.patch(s3, "S3_AUGMENT_TABLE", [])
     session_factory = test.replay_flight_data("test_s3_encryption_audit")
 
+    # we have to use a random int here to ensure that we're only pulling in resources
+    # that we've created from this execution
+    random_int = aws_s3_encryption_audit['random_integer.random.result']
+
     p = test.load_policy(
         {
             "name": "s3-audit",
             "resource": "s3",
             "filters": [
+                {
+                    "type": "value",
+                    "key": "Name",
+                    "value": "c7n-aws-s3-encryption-audit-test-[a|b|c]-%s" % random_int,
+                    "op": "regex"
+                },
                 {
                     "or": [
                         {
@@ -3707,9 +3717,9 @@ def test_s3_encryption_audit(test, aws_s3_encryption_audit):
     assert len(resources) == 3
 
     expected_names = [
-        'c7n-aws-s3-encryption-audit-test-a',
-        'c7n-aws-s3-encryption-audit-test-b',
-        'c7n-aws-s3-encryption-audit-test-c',
+        f'c7n-aws-s3-encryption-audit-test-a-{random_int}',
+        f'c7n-aws-s3-encryption-audit-test-b-{random_int}',
+        f'c7n-aws-s3-encryption-audit-test-c-{random_int}',
     ]
     actual_names = sorted([r.get('Name') for r in resources])
 
