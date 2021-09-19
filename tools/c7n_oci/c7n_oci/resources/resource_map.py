@@ -1,0 +1,6 @@
+# Copyright The Cloud Custodian Authors.
+# SPDX-License-Identifier: Apache-2.0
+ResourceMap = {
+    "oci.instance": "",
+    "oci.block_volume": "",
+}
